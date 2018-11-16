@@ -44,7 +44,7 @@ class Repair extends Admin {
     }
 
     public function index(){
-        $list = \think\Db::name('Repair')->order('id asc')->select();
+        $list = \think\Db::name('Repair')->order('id asc')->paginate(2);
         $this->assign('list', $list);
         $this->assign('meta_title' , '报修管理');
         return $this->fetch();

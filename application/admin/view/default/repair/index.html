@@ -22,7 +22,7 @@
 					<th>姓名</th>
                     <th>电话</th>
 					<th>地址</th>
-					<th>内容</th>
+					<th>报修时间</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -36,7 +36,7 @@
 						<td>{$repair.name}</td>
                         <td>{$repair.tel}</td>
 						<td>{$repair.address}</td>
-						<td>{$repair.content}</td>
+						<td>{$repair.create_time|date='Y-m-d H:i:s',###}</td>
 						<td>
 							<a title="编辑" href="{:url('edit?id='.$repair['id'].'&pid='.$pid)}">编辑</a>
 							<a class="confirm ajax-get" title="删除" href="{:url('del?id='.$repair['id'])}">删除</a>
@@ -49,6 +49,9 @@
 			</tbody>
 		</table>
 	</div>
+<div class="page">
+	{$list->render()}
+</div>
 {/block}
 
 {block name="script"}

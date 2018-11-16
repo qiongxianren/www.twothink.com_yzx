@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:74:"D:\www\twothink\public/../application/admin/view/default/repair\index.html";i:1542079707;s:73:"D:\www\twothink\public/../application/admin/view/default/public\base.html";i:1496373782;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:73:"D:\www\twothink\public/../application/admin/view/default/menu\import.html";i:1496373782;s:73:"D:\www\twothink\public/../application/admin/view/default/public\base.html";i:1496373782;}*/ ?>
 <!doctype html>
 <html>
 <head>
@@ -100,54 +100,36 @@
             
 
             
-	<div class="main-title">
-		<h2>报修管理</h2>
+	<div class="main-title cf">
+		<h2>
+			批量导入 [<?php echo (isset($data['title']) && ($data['title'] !== '')?$data['title']:'顶级菜单'); ?>]
+		</h2>
 	</div>
-
-	<div class="cf">
-		<a class="btn" href="<?php echo url('add','pid='.$pid); ?>">新 增</a>
-		<a class="btn" href="javascript:;">删 除</a>
+	<!-- 标签页导航 -->
+<div class="tab-wrap">
+	<div class="tab-content">
+	<!-- 表单 -->
+	<form id="form" action="<?php echo url('import'); ?>" method="post" class="form-horizontal">
+		<!-- 基础文档模型 -->
+		<div id="tab1" class="tab-pane in tab1">
+			<div class="form-item cf">
+				<label class="item-label">导入的内容<span class="check-tips">（请按照导入格式输入）</span></label>
+				<div class="controls">
+					<label class="textarea input-large">
+						<textarea name="tree"></textarea>
+					</label>
+				</div>
+				<span class="check-tips">导入格式：标题|url(回车键)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标题|url</span>
+			</div>
+		</div>
+		<div class="form-item cf">
+			<button class="btn submit-btn ajax-post hidden" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+			<a class="btn btn-return" href="<?php echo url('index?pid='.$pid); ?>">返 回</a>
+			<input type="hidden" name="pid" value="<?php echo $pid; ?>"/>
+			<input type="hidden" name="cate_id" value="<?php echo (isset($cate_id) && ($cate_id !== '')?$cate_id:0); ?>">
+		</div>
+	</form>
 	</div>
-
-	<div class="data-table table-striped">
-		<table>
-			<thead>
-				<tr>
-					<th class="row-selected">
-						<input class="checkbox check-all" type="checkbox">
-					</th>
-					<th>ID</th>
-					<th>名称</th>
-					<th>姓名</th>
-                    <th>电话</th>
-					<th>地址</th>
-					<th>报修时间</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php if(!(empty($list) || (($list instanceof \think\Collection || $list instanceof \think\Paginator ) && $list->isEmpty()))): if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$repair): $mod = ($i % 2 );++$i;?>
-					<tr>
-						<td><input class="ids row-selected" type="checkbox" name="" id="" value="<?php echo $repair['id']; ?>"> </td>
-						<td><?php echo $repair['id']; ?></td>
-						<td><?php echo $repair['title']; ?></td>
-						<td><?php echo $repair['name']; ?></td>
-                        <td><?php echo $repair['tel']; ?></td>
-						<td><?php echo $repair['address']; ?></td>
-						<td><?php echo date('Y-m-d H:i:s',$repair['create_time']); ?></td>
-						<td>
-							<a title="编辑" href="<?php echo url('edit?id='.$repair['id'].'&pid='.$pid); ?>">编辑</a>
-							<a class="confirm ajax-get" title="删除" href="<?php echo url('del?id='.$repair['id']); ?>">删除</a>
-						</td>
-					</tr>
-				<?php endforeach; endif; else: echo "" ;endif; else: ?>
-				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
-				<?php endif; ?>
-			</tbody>
-		</table>
-	</div>
-<div class="page">
-	<?php echo $list->render(); ?>
 </div>
 
         </div>
@@ -247,25 +229,16 @@
     </script>
     
 <script type="text/javascript">
-    $(function() {
-    	//点击排序
-    	$('.list_sort').click(function(){
-    		var url = $(this).attr('url');
-    		var ids = $('.ids:checked');
-    		var param = '';
-    		if(ids.length > 0){
-    			var str = new Array();
-    			ids.each(function(){
-    				str.push($(this).val());
-    			});
-    			param = str.join(',');
-    		}
 
-    		if(url != undefined && url != ''){
-    			window.location.href = url + '/ids/' + param;
-    		}
-    	});
-    });
+$('#submit').click(function(){
+	$('#form').submit();
+});
+
+
+$(function(){
+	//导航高亮
+	highlight_subnav('<?php echo url('index'); ?>');
+});
 </script>
 
 </body>

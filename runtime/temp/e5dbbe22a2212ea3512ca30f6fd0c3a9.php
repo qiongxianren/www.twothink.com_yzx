@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:74:"D:\www\twothink\public/../application/admin/view/default/repair\index.html";i:1542079707;s:73:"D:\www\twothink\public/../application/admin/view/default/public\base.html";i:1496373782;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:71:"D:\www\twothink\public/../application/admin/view/default/menu\sort.html";i:1496373782;s:73:"D:\www\twothink\public/../application/admin/view/default/public\base.html";i:1496373782;}*/ ?>
 <!doctype html>
 <html>
 <head>
@@ -100,55 +100,38 @@
             
 
             
-	<div class="main-title">
-		<h2>报修管理</h2>
+	<div class="main-title cf">
+		<h2>
+			菜单排序 [ <a href="<?php echo url('index',array('pid'=>input('pid'))); ?>">返回列表</a> ]
+		</h2>
 	</div>
-
-	<div class="cf">
-		<a class="btn" href="<?php echo url('add','pid='.$pid); ?>">新 增</a>
-		<a class="btn" href="javascript:;">删 除</a>
+	<div class="sort">
+		<form action="<?php echo url('sort'); ?>" method="post">
+<!-- 			<div class="sort_top">
+				查找：<input type="text"><button class="btn search" type="button">查找</button>
+			</div> -->
+			<div class="sort_center">
+				<div class="sort_option">
+					<select value="" size="8">
+						<?php if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+							<option class="ids" title="<?php echo $vo['title']; ?>" value="<?php echo $vo['id']; ?>"><?php echo $vo['title']; ?></option>
+						<?php endforeach; endif; else: echo "" ;endif; ?>
+					</select>
+				</div>
+				<div class="sort_btn">
+					<button class="top btn" type="button">第 一</button>
+					<button class="up btn" type="button">上 移</button>
+					<button class="down btn" type="button">下 移</button>
+					<button class="bottom btn" type="button">最 后</button>
+				</div>
+			</div>
+			<div class="sort_bottom">
+				<input type="hidden" name="ids">
+				<button class="sort_confirm btn submit-btn" type="button">确 定</button>
+				<button class="sort_cancel btn btn-return" type="button" url="<?php echo \think\Cookie::get('__forward__'); ?>">返 回</button>
+			</div>
+		</form>
 	</div>
-
-	<div class="data-table table-striped">
-		<table>
-			<thead>
-				<tr>
-					<th class="row-selected">
-						<input class="checkbox check-all" type="checkbox">
-					</th>
-					<th>ID</th>
-					<th>名称</th>
-					<th>姓名</th>
-                    <th>电话</th>
-					<th>地址</th>
-					<th>报修时间</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php if(!(empty($list) || (($list instanceof \think\Collection || $list instanceof \think\Paginator ) && $list->isEmpty()))): if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$repair): $mod = ($i % 2 );++$i;?>
-					<tr>
-						<td><input class="ids row-selected" type="checkbox" name="" id="" value="<?php echo $repair['id']; ?>"> </td>
-						<td><?php echo $repair['id']; ?></td>
-						<td><?php echo $repair['title']; ?></td>
-						<td><?php echo $repair['name']; ?></td>
-                        <td><?php echo $repair['tel']; ?></td>
-						<td><?php echo $repair['address']; ?></td>
-						<td><?php echo date('Y-m-d H:i:s',$repair['create_time']); ?></td>
-						<td>
-							<a title="编辑" href="<?php echo url('edit?id='.$repair['id'].'&pid='.$pid); ?>">编辑</a>
-							<a class="confirm ajax-get" title="删除" href="<?php echo url('del?id='.$repair['id']); ?>">删除</a>
-						</td>
-					</tr>
-				<?php endforeach; endif; else: echo "" ;endif; else: ?>
-				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
-				<?php endif; ?>
-			</tbody>
-		</table>
-	</div>
-<div class="page">
-	<?php echo $list->render(); ?>
-</div>
 
         </div>
         <div class="cont-ft">
@@ -246,27 +229,80 @@
         }
     </script>
     
-<script type="text/javascript">
-    $(function() {
-    	//点击排序
-    	$('.list_sort').click(function(){
-    		var url = $(this).attr('url');
-    		var ids = $('.ids:checked');
-    		var param = '';
-    		if(ids.length > 0){
-    			var str = new Array();
-    			ids.each(function(){
-    				str.push($(this).val());
-    			});
-    			param = str.join(',');
-    		}
+	<script type="text/javascript">
+	//导航高亮
+	highlight_subnav('<?php echo url('Menu/index'); ?>');
+		$(function(){
+			sort();
+			$(".top").click(function(){
+				rest();
+				$("option:selected").prependTo("select");
+				sort();
+			})
+			$(".bottom").click(function(){
+				rest();
+				$("option:selected").appendTo("select");
+				sort();
+			})
+			$(".up").click(function(){
+				rest();
+				$("option:selected").after($("option:selected").prev());
+				sort();
+			})
+			$(".down").click(function(){
+				rest();
+				$("option:selected").before($("option:selected").next());
+				sort();
+			})
+			$(".search").click(function(){
+				var v = $("input").val();
+				$("option:contains("+v+")").attr('selected','selected');
+			})
+			function sort(){
+				$('option').text(function(){return ($(this).index()+1)+'.'+$(this).text()});
+			}
 
-    		if(url != undefined && url != ''){
-    			window.location.href = url + '/ids/' + param;
-    		}
-    	});
-    });
-</script>
+			//重置所有option文字。
+			function rest(){
+				$('option').text(function(){
+					return $(this).text().split('.')[1]
+				});
+			}
+
+			//获取排序并提交
+			$('.sort_confirm').click(function(){
+				var arr = new Array();
+				$('.ids').each(function(){
+					arr.push($(this).val());
+				});
+				$('input[name=ids]').val(arr.join(','));
+				$.post(
+					$('form').attr('action'),
+					{
+					'ids' :  arr.join(',')
+					},
+					function(data){
+						if (data.code) {
+	                        updateAlert(data.msg + ' 页面即将自动跳转~','alert-success');
+	                    }else{
+	                        updateAlert(data.msg,'alert-success');
+	                    }
+	                    setTimeout(function(){
+	                        if (data.code) {
+	                        	$('.sort_cancel').click();
+	                        }
+	                    },1500);
+					},
+					'json'
+				);
+			});
+
+			//点击取消按钮
+			$('.sort_cancel').click(function(){
+				window.location.href = $(this).attr('url');
+			});
+		})
+	</script>
 
 </body>
 </html>

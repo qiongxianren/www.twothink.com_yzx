@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:74:"D:\www\twothink\public/../application/admin/view/default/repair\index.html";i:1542079707;s:73:"D:\www\twothink\public/../application/admin/view/default/public\base.html";i:1496373782;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:78:"D:\www\twothink\public/../application/admin/view/default/action\actionlog.html";i:1496373782;s:73:"D:\www\twothink\public/../application/admin/view/default/public\base.html";i:1496373782;}*/ ?>
 <!doctype html>
 <html>
 <head>
@@ -100,55 +100,50 @@
             
 
             
+	<!-- 标题栏 -->
 	<div class="main-title">
-		<h2>报修管理</h2>
+		<h2>行为日志</h2>
 	</div>
 
-	<div class="cf">
-		<a class="btn" href="<?php echo url('add','pid='.$pid); ?>">新 增</a>
-		<a class="btn" href="javascript:;">删 除</a>
+    <div>
+        <button class="btn ajax-get confirm" url="<?php echo url('clear'); ?>">清 空</button>
+		<button class="btn ajax-post confirm" target-form="ids" url="<?php echo url('remove'); ?>">删 除</button>
+    </div>
+	<!-- 数据列表 -->
+	<div class="data-table">
+	<table class="">
+    <thead>
+        <tr>
+		<th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+		<th class="">编号</th>
+		<th class="">行为名称</th>
+		<th class="">执行者</th>
+		<th class="">执行时间</th>
+		<th class="">操作</th>
+		</tr>
+    </thead>
+    <tbody>
+		<?php if(!(empty($_list) || (($_list instanceof \think\Collection || $_list instanceof \think\Paginator ) && $_list->isEmpty()))): if(is_array($_list) || $_list instanceof \think\Collection || $_list instanceof \think\Paginator): $i = 0; $__LIST__ = $_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+		<tr>
+            <td><input class="ids" type="checkbox" name="ids[]" value="<?php echo $vo['id']; ?>" /></td>
+			<td><?php echo $vo['id']; ?> </td>
+			<td><?php echo get_action($vo['action_id'],'title'); ?></td>
+			<td><?php echo get_nickname($vo['user_id']); ?></td>
+			<td><span><?php echo time_format($vo['create_time']); ?></span></td>
+			<td><a href="<?php echo url('Action/edit?id='.$vo['id']); ?>">详细</a>
+				<a class="confirm ajax-get" href="<?php echo url('Action/remove?ids='.$vo['id']); ?>">删除</a>
+                </td>
+		</tr>
+		<?php endforeach; endif; else: echo "" ;endif; else: ?>
+		<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+		<?php endif; ?>
+	</tbody>
+    </table>
 	</div>
+	<!-- 分页 -->
+	<div class="page"><?php echo $_page; ?></div>
+	<!-- /分页 -->
 
-	<div class="data-table table-striped">
-		<table>
-			<thead>
-				<tr>
-					<th class="row-selected">
-						<input class="checkbox check-all" type="checkbox">
-					</th>
-					<th>ID</th>
-					<th>名称</th>
-					<th>姓名</th>
-                    <th>电话</th>
-					<th>地址</th>
-					<th>报修时间</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php if(!(empty($list) || (($list instanceof \think\Collection || $list instanceof \think\Paginator ) && $list->isEmpty()))): if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$repair): $mod = ($i % 2 );++$i;?>
-					<tr>
-						<td><input class="ids row-selected" type="checkbox" name="" id="" value="<?php echo $repair['id']; ?>"> </td>
-						<td><?php echo $repair['id']; ?></td>
-						<td><?php echo $repair['title']; ?></td>
-						<td><?php echo $repair['name']; ?></td>
-                        <td><?php echo $repair['tel']; ?></td>
-						<td><?php echo $repair['address']; ?></td>
-						<td><?php echo date('Y-m-d H:i:s',$repair['create_time']); ?></td>
-						<td>
-							<a title="编辑" href="<?php echo url('edit?id='.$repair['id'].'&pid='.$pid); ?>">编辑</a>
-							<a class="confirm ajax-get" title="删除" href="<?php echo url('del?id='.$repair['id']); ?>">删除</a>
-						</td>
-					</tr>
-				<?php endforeach; endif; else: echo "" ;endif; else: ?>
-				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
-				<?php endif; ?>
-			</tbody>
-		</table>
-	</div>
-<div class="page">
-	<?php echo $list->render(); ?>
-</div>
 
         </div>
         <div class="cont-ft">
@@ -247,25 +242,11 @@
     </script>
     
 <script type="text/javascript">
-    $(function() {
-    	//点击排序
-    	$('.list_sort').click(function(){
-    		var url = $(this).attr('url');
-    		var ids = $('.ids:checked');
-    		var param = '';
-    		if(ids.length > 0){
-    			var str = new Array();
-    			ids.each(function(){
-    				str.push($(this).val());
-    			});
-    			param = str.join(',');
-    		}
-
-    		if(url != undefined && url != ''){
-    			window.location.href = url + '/ids/' + param;
-    		}
-    	});
-    });
+$(function(){
+	$("#action_add").click(function(){
+		window.location.href = $(this).attr('url');
+	})
+})
 </script>
 
 </body>

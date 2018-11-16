@@ -28,5 +28,4 @@ class Index extends Home{
 
         return $this->fetch();
     }
-
 }

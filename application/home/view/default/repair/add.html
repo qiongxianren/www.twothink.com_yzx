@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>用户登录</title>
+    <title>在线报修</title>
 
     <!-- Bootstrap -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -44,37 +44,35 @@
     <!--导航结束-->
 
     <div class="container-fluid">
-        <form class="login-form" action="" method="post">
+        <form action="" method="post">
             <div class="form-group">
-                <label>用户名:</label>
-                <input type="text" name="username" class="form-control" />
+                <label>您的姓名(必填):</label>
+                <input type="text" name="name" class="form-control" />
             </div>
             <div class="form-group">
-                <label>密码:</label>
-                <input type="password" name="password" class="form-control" />
+                <label>您的电话(必填):</label>
+                <input type="text" name="tel" class="form-control" />
             </div>
             <div class="form-group">
-                <label>验证码:</label>
-                <input type="text" name="verify" class="form-control" />
+                <label>您的地址(必填):</label>
+                <input type="text" name="address" class="form-control" />
             </div>
-            <div class="control-group">
-                <label class="control-label"></label>
-                <div class="controls verifyimg">
-                    {:captcha_img()}
-                </div>
-                <div class="controls Validform_checktip text-warning"></div>
+            <div class="form-group">
+                <label>标题(必填):</label>
+                <input type="text" name="title" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>内容(详细描述需要报修的内容):</label>
+                <textarea type="text" name="content" class="form-control"></textarea>
             </div>
             <!--<div class="form-group">-->
             <!--<div><a href="#"><span class="glyphicon glyphicon-plus onlineUpImg"></span></a></div>-->
             <!--<label>图片(最多上传5张,可不上传):</label>-->
             <!--</div>-->
             <div class="form-group">
-                <button class="btn btn-primary onlineBtn">登录</button>
+                <button class="btn btn-primary onlineBtn">确认提交</button>
             </div>
         </form>
-        <div>
-            <div class="pull-right"><a href="{:url('login/register')}">新用户注册</a></div>
-        </div>
     </div>
 </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -82,48 +80,4 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 </body>
-
-{block name="side"} {/block}
-{block name="script"}
-<script type="text/javascript">
-
-    $(document)
-        .ajaxStart(function(){
-            $("button:submit").addClass("log-in").attr("disabled", true);
-        })
-        .ajaxStop(function(){
-            $("button:submit").removeClass("log-in").attr("disabled", false);
-        });
-
-
-    $("form").submit(function(){
-        var self = $(this);
-        $.post(self.attr("action"), self.serialize(), success, "json");
-        return false;
-
-        function success(data){
-            if(data.code){
-                window.location.href = data.url;
-            } else {
-                self.find(".Validform_checktip").text(data.msg);
-                //刷新验证码
-                $(".verifyimg img").click();
-            }
-        }
-    });
-
-    $(function(){
-        //刷新验证码
-        var verifyimg = $(".verifyimg img").attr("src");
-        $(".verifyimg img").click(function(){
-            if( verifyimg.indexOf('?')>0){
-                $(".verifyimg img").attr("src", verifyimg+'&random='+Math.random());
-            }else{
-                $(".verifyimg img").attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
-            }
-        });
-    });
-</script>
-{/block}
-
 </html>

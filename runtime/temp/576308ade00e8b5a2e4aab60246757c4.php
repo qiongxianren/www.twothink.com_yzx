@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:83:"D:\www\twothink\public/../application/home/view/default/article\article\detail.html";i:1542125766;}*/ ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -28,7 +29,7 @@
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container-fluid text-center">
             <div class="col-xs-3">
-                <p class="navbar-text"><a href="/" class="navbar-link">首页</a></p>
+                <p class="navbar-text"><a href="index.html" class="navbar-link">首页</a></p>
             </div>
             <div class="col-xs-3">
                 <p class="navbar-text"><a href="#" class="navbar-link">服务</a></p>
@@ -44,61 +45,18 @@
     <!--导航结束-->
 
     <div class="container-fluid">
-        {volist name="list" id="data"}
-        <div class="row noticeList">
-            <a href="notice-detail.html">
-                <a href="{:url('Article/detail?id='.$data['id'])}">
-                <div class="col-xs-2">
-                    <img class="noticeImg" src="__ROOT__{$data.cover_id|get_cover_path}" />
-                </div>
-                <div class="col-xs-10">
-                    <p class="title">{$data.title}</p>
-                    <p class="intro">{$data.description}</p>
-                    <p class="info">浏览:{$data.view} <span class="pull-right">{$data.create_time}</span> </p>
-                </div>
-                </a>
-            </a>
+        <div class="blank"></div>
+        <h3 class="noticeDetailTitle"><strong><?php echo $info['title']; ?></strong></h3>
+        <div class="noticeDetailInfo">发布者:<?php echo get_username($info['uid']); ?></div>
+        <div class="noticeDetailInfo">发布时间：<?php echo date('Y-m-d H:i:s',$info['create_time']); ?></div>
+        <div class="noticeDetailContent">
+            <?php echo $info['content']; ?>
         </div>
-        {/volist}
-        <button class="btn btn-default btn-block get_more" onclick="getLists()">获取更多。。。</button>
-        <p class="text-center">没有更多了。。。 </p>
     </div>
 </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="/static/jquery-1.11.2.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-
-<script type="text/javascript">
-    (function(){
-        var ThinkPHP = window.Think = {
-            "ROOT"   : "", //当前网站地址
-            "APP"    : "__APP__", //当前项目地址
-            "PUBLIC" : "/static", //项目公共目录地址
-            "DEEP"   : "", //PATHINFO分割符
-            "MODEL"  : ["", "", "html"],
-            "VAR"    : ["", "", ""]
-        }
-    })();
-</script>
-
-<script>
-    var page = 1;
-    $(document).ready(function(){
-        getLists();
-    });
-    var getLists = function () {
-        $(".get_more").remove();
-        $.get("/home/article/ajaxlists.html?category=43&page="+page,function(data){
-            $("#article_list").append(data);
-        });
-        page++;
-    }
-</script>
-<!-- 用于加载js代码 -->
-<!-- 页面footer钩子，一般用于加载插件JS文件和JS代码 -->
-<div class="hidden"><!-- 用于加载统计代码等隐藏元素 -->
-
-</div>
 </body>
 </html>
